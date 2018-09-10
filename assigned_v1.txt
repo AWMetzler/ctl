@@ -1,0 +1,51 @@
+Title: Colorado Indigency Calculator
+Author: Anthony W. Metzler
+Before:<link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">Anthony W. Metzler Indigency Calculator</h2>
+<p><b>This is a <a href="http://www.codingthelaw.org/">class project</a>. You should not rely on it as a source of legal information. It is likely incomplete.</b></p>
+<p>Answer the following questions to see if someone qualifies for appointment of counsel.</p>
+
+Q(1):Is the person in question a defendant in a criminal matter?
+A:Yes
+	Q(1.1):GOTO:2
+A:No
+	Q(1.2):GOTO:failure
+Q(2):Is the person indigent?
+A:Yes
+	Q(2.1):GOTO:success
+A:No
+	Q(2.2):GOTO:failure
+A:Im not sure
+	Q(2.3):GOTO:3
+Q(3):Does the client make less than 125% of the federal poverty guideline?
+A[https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf]:What's this? (click me)
+A:Yes
+	Q(3.2):GOTO:success
+A:No
+	Q(3.3):GOTO:failure
+A:No, but they are close
+	Q(3.4):GOTO:4
+Q(4):Does the person make between 125% and 218% of the federal poverty guideline?
+A[https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf]:What's this? (click me)
+A:Yes
+	Q(4.2):GOTO:5
+A:No, they make more than 218%
+	Q(4.3):GOTO:failure
+Q(5):Was the crime that was committed a felony?
+A[https://www.criminaldefenselawyer.com/resources/criminal-defense/felony-offense/colorado-felony-class.htm]:I need a definition of felony (click me)
+A:Yes
+	Q(5.2):GOTO:success
+A:No
+	Q(5.3):GOTO:failure
+A:Yes, but only a small felony. 
+	Q(5.4):GOTO:6
+Q(6):Does the client support a multi-person family home?
+A:Yes
+	Q(6.1):GOTO:success
+A:No
+	Q(6.2):GOTO:failure
+
+
+Q(success):Congratulations! The client is eligible to receive state-appointed counsel.
+Q(failure):Sorry, the client is not eligible to receive state-appointed counsel.
