@@ -57,7 +57,7 @@ A: No
 			Q(1.2.1.1): Are you facing a civil or criminal matter?
 			A[javascript:if (fedpov(getvar('house'),getvar('income'),125)){ goto('qualciv') } else { goto('noqualciv') } ]: Civil
 			A[javascript:if (fedpov(getvar('house'),getvar('income'),125)){ goto('qualcrim') } else if (fedpov(getvar('house'),getvar('income'),250)) { goto('noqualbut') } else { goto('noqualcrim') } ]: Criminal
-
+	
 
 
 
@@ -71,24 +71,47 @@ A: No
 	Q(3.2):GOTO:nomore
 
 Q(qualcrim): You probably qualify as indigent since you earn less than 125% of the poverty line. So you'll likely be assigned a lawyer by the judge. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+Q(qualfelony): You probably qualify for assistance because of the severe nature of your offense.  You'll likely be assigned a lawyer by the judge. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
 
-Q(qualbut): You probably qualify as indigent but able to contribute since you earn between 125% and 250% of the poverty line. So you'll likely be assigned a lawyer and asked to pay a small fee. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+Q(qualbut): You probably qualify as indigent but able to contribute since you earn between 125% and 218% of the poverty line. So you'll likely be assigned a lawyer and asked to pay a small fee. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+Q(felonybut): You probably qualify for assistance because of the nature of your offense, but you will likely have to contribute.  So you'll likely be assigned a lawyer and asked to pay a small fee. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+
 
 Q(noqualciv): You probably won't qualify as indigent since you earn more than 125% of the poverty line. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>. So you'll probably need to hire an attorney. Would you like to search for one near you?
 A:[https://www.avvo.com/find-a-lawyer] Yes.
-	Q(6.1):GOTO:nomore
+	Q(8.1):GOTO:nomore
 A: No
-	Q(6.2):GOTO:nomore
+	Q(8.2):GOTO:nomore
 
 Q(noqualcrim): You probably won't qualify as indigent or indigent but able to contribute since you earn more than 218% of the poverty line. So you'll probably need to hire an attorney. Would you like to search for one near you?
 A:[https://www.avvo.com/find-a-lawyer] Yes.
-	Q(7.1):GOTO:nomore
+	Q(9.1):GOTO:nomore
 A: No
-	Q(7.2):GOTO:nomore
+	Q(9.2):GOTO:nomore
+Q(nocuzmisdemeanor): You probably won't qualify for assistance because this was a misdemeanor. So you'll probably need to hire an attorney. Would you like to search for one near you?
+A:[https://www.avvo.com/find-a-lawyer] Yes.
+	Q(10.1):GOTO:nomore
+A: No
+	Q(10.2):GOTO:nomore
 
 Q(nomore): I'm afraid there's nothing else I can help you with. I hope you have a nice day.
 
 
 
-Q(success):Congratulations! The client is eligible to receive state-appointed counsel.
-Q(failure):Sorry, the client is not eligible to receive state-appointed counsel.
+Q(highfelony):Was the crime that was committed a Class 1-3 Felony?
+A:Yes
+	Q(12.1):GOTO:qualfelony
+A:No
+	Q(12.2):GOTO:lowfelony
+A[https://sca.district70.org/ourpages/auto/2016/1/11/54933902/Colorado%20Felony%20and%20Misdemeanor%20Crimes%20by%20Class%20and%20Sentences.pdf]:Not Sure? Click me to look at the standard for classes of felonies.
+
+Q(lowfelony):Was the crime that was committed a Class 4-6 Felony?
+A:Yes
+	Q(13.1):GOTO:felonybut
+A:No
+	Q(13.2):GOTO:misdemeanor
+Q(misdemeanor):Was the crime that was committed a misdemeanor?
+A:Yes
+	Q(14.1):GOTO:nocuzmisdemeanor
+A:No
+	Q(14.2):GOTO:highfelony
