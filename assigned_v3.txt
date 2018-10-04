@@ -1,0 +1,139 @@
+Title: Colorado Indigency Calculator
+Author: Anthony W. Metzler
+Before: <input type="hidden" name="name" value="CA State Indigency Calc Summary"/>
+<input type="hidden" name="docx_uri" value="https://awmetzler.github.io/ctl/CAStateIndegencyCalc.docx"/>
+
+<link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">Anthony W. Metzler Indigency Calculator</h2>
+<p><b>This is a <a href="http://www.codingthelaw.org/">class project</a>. You should not rely on it as a source of legal information. It is likely incomplete.</b></p>
+
+
+<p>Answer the following questions to see if you qualify for an appointment of counsel or fee waiver.</p>
+After: 
+<script>
+function fedpov(house,income,percentage){
+	// Determines if your income is less than or equal to 
+	// a percentage of the 2018 federal poverty guidelines 
+	// for the contiguous United States. See
+	// https://www.federalregister.gov/documents/2018/01/18/2018-00814/annual-update-of-the-hhs-poverty-guidelines
+	
+		var line = NaN;
+	
+		if (house == 1) {
+			line = 12140;
+		} else if (house == 2) {
+			line = 16460;
+		} else if (house == 3) {
+			line = 20780;
+		} else if (house == 4) {
+			line = 25100;
+		} else if (house == 5) {
+			line = 29420;
+		} else if (house == 6) {
+			line = 33740;
+		} else if (house == 7) {
+			line = 38060;
+		} else if (house == 8) {
+			line = 42380;
+		} else if (house > 8) {
+			line = 42380 + (house-8)*4320;
+		}
+	
+		if (income <= (line*(percentage/100))) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+</script>	
+
+Q(name):What's your full name? (i.e. John Smith)
+X:
+	Q(coolthanks):Thanks, nice to meet you <x>name</x>! GOTO:street
+Q(street):What is your street address?  For example: "123 Main st."
+X:
+	Q(address):What is your city, state, and zip?  For example: "Boston, MA. 02108"
+	X:
+		Q(house): How many people are in your household?
+		X:number
+			Q(income): How much income does your household bring in per year in after tax dollars?
+			X:number
+				Q(assistance): Do your receive public assistance? 
+				A: Yes
+					Q(2.1.1.1.1.1):GOTO:qualaid
+				A: No
+	
+					Q(civcrim): Are you facing a civil or criminal matter?
+					A[javascript:if (fedpov(getvar('house'),getvar('income'),125)){ goto('qualciv') } else { goto('noqualciv') } ]: Civil
+					A[javascript:if (fedpov(getvar('house'),getvar('income'),125)){ goto('qualcrim') } else if (fedpov(getvar('house'),getvar('income'),218)) { goto('noqualbut') } else { goto('noqualcrim') } ]: Criminal
+	
+
+
+
+
+Q(qualaid): You probably qualify as indigent because you receive public assistance. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>. GOTO:summary
+Q(summary):Would you like to see a summary of our interview?
+A[javascript:submit2('https://colarusso.pythonanywhere.com/2docx/','POST','','','','json_doc')]:Yes
+	Q(sum1):Your summary should download.
+A:No
+	Q(sumnone):GOTO:nosummary
+
+Q(qualciv): You probably qualify as indigent since you earn less than 125% of the poverty line. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>. Consequently, you may be eligible to have your court fees waived. Would you like me to open up a fee waiver for you to file? 
+A:[https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf] Yes
+	Q(5.1): If the affidavit of indigency didn't open in a new window/tab, you can find it <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf">here</a>. Either way, after you fill it out take it to court and give it to the clerk.
+A: No
+	Q(5.2):GOTO:nomore
+
+Q(qualcrim): You probably qualify as indigent since you earn less than 125% of the poverty line. So you'll likely be assigned a lawyer by the judge. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+Q(qualfelony): You probably qualify for assistance because of the severe nature of your offense.  You'll likely be assigned a lawyer by the judge. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+
+Q(qualbut): You probably qualify as indigent but able to contribute since you earn between 125% and 218% of the poverty line. However, depending on the severity of the offense, you could still qualify.
+A:See if I qualify
+	Q(8.1):GOTO:highfelony
+
+Q(felonybut): You probably qualify for assistance because of the nature of your offense, but you will likely have to contribute.  So you'll likely be assigned a lawyer and asked to pay a small fee. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>.
+
+
+Q(noqualciv): You probably won't qualify as indigent since you earn more than 125% of the poverty line. See <a href="https://www.courts.state.co.us/Courts/Supreme_Court/Directives/04-04%20Amended%202018%20Jul%201%20WEB.pdf" target=_new>Chief Justice Directive 404</a>. So you'll probably need to hire an attorney. Would you like to search for one near you?
+A:[https://www.avvo.com/find-a-lawyer] Yes.
+	Q(10.1):GOTO:nomore
+A: No
+	Q(10.2):GOTO:nomore
+
+Q(noqualcrim): You probably won't qualify as indigent or indigent but able to contribute since you earn more than 218% of the poverty line. So you'll probably need to hire an attorney. However, depending on the severity of the offense, you could still qualify.
+A:See if I qualify
+	Q(11.1):GOTO:highfelony
+
+
+Q(nocuzmisdemeanor): You probably won't qualify for assistance because this was a misdemeanor. So you'll probably need to hire an attorney. Would you like to search for one near you?
+A:[https://www.avvo.com/find-a-lawyer] Yes.
+	Q(12.1):GOTO:nomore
+A: No
+	Q(12.2):GOTO:nomore
+
+Q(nomore): I'm afraid there's nothing else I can help you with. I hope you have a nice day.
+
+
+
+Q(highfelony):Was the crime that was committed a Class 1-3 Felony?
+A:Yes
+	Q(14.1):GOTO:qualfelony
+A:No
+	Q(14.2):GOTO:lowfelony
+A[https://sca.district70.org/ourpages/auto/2016/1/11/54933902/Colorado%20Felony%20and%20Misdemeanor%20Crimes%20by%20Class%20and%20Sentences.pdf]:Not Sure? Click me to look at the standard for classes of felonies.
+
+Q(lowfelony):Was the crime that was committed a Class 4-6 Felony?
+A:Yes
+	Q(15.1):GOTO:felonybut
+A:No
+	Q(15.2):GOTO:misdemeanor
+Q(misdemeanor):Was the crime that was committed a misdemeanor?
+A:Yes
+	Q(16.1):GOTO:nocuzmisdemeanor
+A:No
+	Q(16.2):GOTO:highfelony
+
+Q(nosummary):Thank you! Have a wonderful day. If you would like to get a summary of the interview select yes.  If not, best of luck!
+A:Yes
+	Q(17.1):GOTO:summary
