@@ -1,0 +1,5 @@
+call_id,person_id,attorney,body_part_2,body_part_3,body_part_4,body_part_5,surgery,take,sex,date of birth,EYE,Head,Neck,ankle,arm,elbow,eye,foot/feet,hand,hands,head,hip,neck
+0,136.0,100.0,Patty Hewes,,,,,1,0.0,female,1990-08-31,0,1,0,0,0,0,0,0,0,0,0,0,0
+1,137.0,101.0,Patty Hewes,elbow,,,,1,0.0,male,1971-10-14,0,0,0,0,0,0,0,0,0,1,0,0,0
+2,138.0,102.0,Rachel Zane,arm,foot/feet,,,0,0.0,female,1962-05-24,0,0,0,0,0,0,0,0,0,0,0,1,0
+3,139.0,103.0,Perry Mason,ankle,,,,0,1.0,female,2017-03-10,1,0,0,0,0,0,0,0,0,0,0,0,0
